@@ -4,7 +4,1370 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FlowVigil — No More Silent Failures</title>
-<meta http-equiv="refresh" content="0; url=/score">
+<meta name="description" content="Workflow monitoring for no-code automation agencies. One dashboard. Every client. Zero surprises.">
+<meta property="og:title" content="FlowVigil — No More Silent Failures">
+<meta property="og:description" content="Workflow monitoring for no-code automation agencies. One dashboard. Every client. Zero surprises.">
+<meta property="og:url" content="https://flowvigil.com">
+<link rel="canonical" href="https://flowvigil.com">
+<link rel="icon" type="image/svg+xml" href="assets/flowvigil-logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #f6f6f3;
+    --surface:  #ffffff;
+    --surface-2:#fbfbf9;
+    --line:     #e6e5df;
+    --line-2:   #d6d5cd;
+    --line-3:   #c2c1b8;
+
+    --ink:      #0b0b0a;
+    --ink-2:    #1a1a18;
+    --ink-3:    #3a3a36;
+    --ink-4:    #6b6b64;
+    --ink-5:    #97968c;
+
+    --emerald:  #047857;
+    --emerald-tint: #ecf6f1;
+    --amber:    #b45309;
+    --amber-tint:#fbf3e6;
+    --ruby:     #b91c1c;
+    --ruby-tint:#fbebea;
+    --indigo:   #1e3a8a;
+    --indigo-tint:#eef0fb;
+
+    --brand-navy: #131421;
+    --brand-mint: #20F3BB;
+
+    --sans:  'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --head:  'Space Grotesk', 'Inter', sans-serif;
+    --mono:  'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+  html, body { background: var(--bg); }
+
+  body {
+    color: var(--ink);
+    font-family: var(--sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgba(11,11,10,0.025) 1px, transparent 1px);
+    background-size: 96px 100%;
+    mask-image: linear-gradient(to bottom, transparent, #000 200px, #000 calc(100% - 200px), transparent);
+  }
+
+  .page { position: relative; z-index: 1; }
+
+  .container {
+    max-width: 1180px; margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ─── NAV ─────────────────────────────────────────── */
+  .nav {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    background: rgba(246, 246, 243, 0.85);
+    backdrop-filter: saturate(1.4) blur(8px);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--ink);
+  }
+  .logo-mark {
+    width: 30px; height: 30px;
+    background: var(--brand-navy);
+    border-radius: 6px;
+    display: grid; place-items: center;
+    overflow: hidden;
+  }
+  .logo-mark svg { width: 22px; height: 22px; display: block; }
+  .logo-name {
+    font-family: var(--head);
+    font-size: 16px; font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  .nav-links {
+    display: flex; align-items: center; gap: 28px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px;
+    color: var(--ink-3);
+    text-decoration: none;
+    transition: color .15s;
+    letter-spacing: -0.005em;
+  }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-cta {
+    font-size: 13px !important;
+    color: #fff !important;
+    background: var(--ink);
+    padding: 9px 16px;
+    border-radius: 4px;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: background .15s;
+  }
+  .nav-cta:hover { background: var(--ink-2) !important; color: #fff !important; }
+
+  /* ─── BUTTONS ──────────────────────────────────────── */
+  .btn {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: #fff;
+    padding: 13px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background .14s, transform .08s, border-color .14s;
+    text-decoration: none;
+  }
+  .btn:hover { background: var(--ink-2); }
+  .btn:active { transform: translateY(1px); }
+  .btn .arrow { transition: transform .15s; }
+  .btn:hover .arrow { transform: translateX(2px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-2);
+  }
+  .btn-ghost:hover {
+    background: var(--surface);
+    border-color: var(--ink);
+  }
+
+  /* ─── COMMON ───────────────────────────────────────── */
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+  }
+  .eyebrow .num { color: var(--ink-5); }
+  .eyebrow .bar { width: 32px; height: 1px; background: var(--line-2); }
+
+  .section-title {
+    font-family: var(--head);
+    font-size: clamp(32px, 4.5vw, 48px);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.032em;
+    color: var(--ink);
+    margin-bottom: 18px;
+    max-width: 22ch;
+  }
+  .section-title em {
+    font-style: normal;
+    background-image: linear-gradient(transparent 62%, rgba(180, 83, 9, 0.28) 62%, rgba(180, 83, 9, 0.28) 86%, transparent 86%);
+    padding: 0 0.04em;
+  }
+  .section-lede {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-3);
+    max-width: 56ch;
+    margin-bottom: 0;
+  }
+
+  section { padding: 96px 0; }
+
+  .section-head {
+    margin-bottom: 56px;
+    max-width: 720px;
+  }
+
+  /* ─── HERO ─────────────────────────────────────────── */
+  .hero { padding: 80px 0 96px; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .hero-eyebrow-row {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .live-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 11px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+  }
+  .live-pill::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--emerald); border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(4,120,87,0.12);
+    animation: pulse 2.2s infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.45; } }
+
+  .hero h1 {
+    font-family: var(--head);
+    font-size: clamp(44px, 6.4vw, 72px);
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    margin-bottom: 24px;
+    max-width: 14ch;
+  }
+  .hero h1 em {
+    font-style: normal;
+    background-image: linear-gradient(transparent 62%, rgba(180, 83, 9, 0.28) 62%, rgba(180, 83, 9, 0.28) 86%, transparent 86%);
+    padding: 0 0.04em;
+  }
+  .hero-sub {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--ink-3);
+    max-width: 48ch;
+    margin-bottom: 36px;
+  }
+  .hero-cta-row {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .hero-note {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-4);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Hero dashboard widget ── */
+  .hero-widget {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgba(11,11,10,0.02);
+  }
+  .widget-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-2);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .widget-head .left { display: flex; align-items: center; gap: 10px; }
+  .widget-head .traffic { display: flex; gap: 5px; }
+  .widget-head .traffic span {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--line-2);
+  }
+  .widget-body { padding: 0; }
+  .widget-summary {
+    padding: 18px 18px 14px;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .ws-cell { }
+  .ws-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .ws-val {
+    font-family: var(--head);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    line-height: 1;
+    display: flex; align-items: baseline; gap: 6px;
+  }
+  .ws-val .delta {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--emerald);
+    font-weight: 500;
+  }
+  .ws-val .delta.down { color: var(--ruby); }
+  .widget-list { padding: 4px 0; }
+  .wl-row {
+    display: grid;
+    grid-template-columns: 12px 1fr auto 60px;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 18px;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .wl-row:last-child { border-bottom: 0; }
+  .wl-status {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .wl-status.ok { background: var(--emerald); }
+  .wl-status.warn { background: var(--amber); box-shadow: 0 0 0 3px rgba(180,83,9,0.12); }
+  .wl-status.crit { background: var(--ruby); animation: critPulse 1.6s infinite; }
+  @keyframes critPulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(185,28,28,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(185,28,28,0); }
+  }
+  .wl-name {
+    color: var(--ink);
+    font-weight: 500;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .wl-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+  }
+  .wl-val {
+    font-family: var(--mono);
+    font-size: 11px;
+    text-align: right;
+    color: var(--ink-3);
+  }
+  .wl-val.crit { color: var(--ruby); font-weight: 600; }
+  .widget-foot {
+    padding: 10px 18px;
+    background: var(--surface-2);
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  /* ─── PAIN ─────────────────────────────────────────── */
+  .pain-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .pain-card {
+    padding: 32px 28px;
+    border-right: 1px solid var(--line);
+    transition: background .15s;
+  }
+  .pain-card:last-child { border-right: none; }
+  .pain-card:hover { background: var(--surface-2); }
+  .pain-icon {
+    width: 36px; height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    display: grid; place-items: center;
+    margin-bottom: 22px;
+    color: var(--ruby);
+    background: var(--ruby-tint);
+  }
+  .pain-icon svg { width: 18px; height: 18px; }
+  .pain-card h3 {
+    font-family: var(--head);
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .pain-card p {
+    font-size: 14.5px;
+    color: var(--ink-3);
+    line-height: 1.55;
+  }
+
+  /* ─── HOW IT WORKS ─────────────────────────────────── */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .step {
+    padding: 32px 28px 28px;
+    border-right: 1px solid var(--line);
+    position: relative;
+  }
+  .step:last-child { border-right: none; }
+  .step-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 22px;
+  }
+  .step-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .step-num strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .step-time {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+  }
+  .step-icon {
+    width: 36px; height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    display: grid; place-items: center;
+    margin-bottom: 18px;
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+  .step-icon svg { width: 18px; height: 18px; }
+  .step h3 {
+    font-family: var(--head);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .step p {
+    font-size: 14.5px;
+    color: var(--ink-3);
+    line-height: 1.55;
+  }
+
+  /* ─── FEATURES ─────────────────────────────────────── */
+  .feat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .feat {
+    padding: 34px 32px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    transition: background .15s;
+  }
+  .feat:nth-child(2n) { border-right: 0; }
+  .feat:nth-last-child(-n+2) { border-bottom: 0; }
+  .feat:hover { background: var(--surface-2); }
+  .feat-head {
+    display: flex; align-items: flex-start; gap: 16px;
+    margin-bottom: 14px;
+  }
+  .feat-icon {
+    width: 38px; height: 38px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    display: grid; place-items: center;
+    background: var(--surface-2);
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+  .feat-icon svg { width: 18px; height: 18px; }
+  .feat-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding-top: 11px;
+  }
+  .feat h3 {
+    font-family: var(--head);
+    font-size: 21px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .feat p {
+    font-size: 14.5px;
+    color: var(--ink-3);
+    line-height: 1.55;
+  }
+
+  /* ─── PRICING ──────────────────────────────────────── */
+  .pricing-head { margin-bottom: 56px; max-width: 720px; }
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    align-items: stretch;
+  }
+  .plan {
+    padding: 32px 28px;
+    border-right: 1px solid var(--line);
+    display: flex; flex-direction: column;
+    background: var(--surface);
+    position: relative;
+  }
+  .plan:last-child { border-right: 0; }
+  .plan.featured {
+    background: var(--ink);
+    color: #fff;
+  }
+  .plan-tag {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .plan-name {
+    font-family: var(--head);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .plan.featured .plan-name { color: #fff; }
+  .plan-pop {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--brand-mint);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .plan-pop::before {
+    content: ''; width: 5px; height: 5px;
+    background: var(--brand-mint); border-radius: 50%;
+  }
+  .plan-desc {
+    font-size: 13px;
+    color: var(--ink-4);
+    margin-bottom: 26px;
+    line-height: 1.5;
+  }
+  .plan.featured .plan-desc { color: rgba(255,255,255,0.6); }
+  .plan-price {
+    font-family: var(--head);
+    font-size: 46px;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    color: var(--ink);
+    margin-bottom: 4px;
+    display: flex; align-items: baseline; gap: 4px;
+  }
+  .plan.featured .plan-price { color: #fff; }
+  .plan-price .unit {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--ink-4);
+    letter-spacing: 0;
+  }
+  .plan.featured .plan-price .unit { color: rgba(255,255,255,0.6); }
+  .plan-period {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 26px;
+  }
+  .plan.featured .plan-period { color: rgba(255,255,255,0.55); }
+  .plan-features {
+    list-style: none;
+    margin-bottom: 28px;
+    flex: 1;
+  }
+  .plan-features li {
+    font-size: 14px;
+    color: var(--ink-2);
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: flex-start; gap: 10px;
+    line-height: 1.4;
+  }
+  .plan.featured .plan-features li {
+    color: rgba(255,255,255,0.92);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .plan-features li:last-child { border-bottom: none; }
+  .plan-features .check {
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+    margin-top: 3px;
+    color: var(--ink);
+  }
+  .plan.featured .plan-features .check { color: var(--brand-mint); }
+  .plan-btn {
+    width: 100%;
+    font-family: var(--sans);
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 12px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    transition: background .15s, color .15s, transform .08s;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .plan-btn:hover { background: var(--ink); color: #fff; }
+  .plan-btn:active { transform: translateY(1px); }
+  .plan.featured .plan-btn {
+    background: #fff;
+    color: var(--ink);
+    border-color: #fff;
+  }
+  .plan.featured .plan-btn:hover { background: #f3f3ef; }
+
+  /* ─── SCORECARD CTA ────────────────────────────────── */
+  .score-cta { padding: 96px 0; }
+  .score-cta-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 56px 48px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    align-items: center;
+    gap: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .score-cta-card h2 {
+    font-family: var(--head);
+    font-size: clamp(28px, 3.5vw, 40px);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 16px;
+    max-width: 18ch;
+  }
+  .score-cta-card h2 em {
+    font-style: normal;
+    background-image: linear-gradient(transparent 62%, rgba(180, 83, 9, 0.28) 62%, rgba(180, 83, 9, 0.28) 86%, transparent 86%);
+    padding: 0 0.04em;
+  }
+  .score-cta-card p {
+    font-size: 15.5px;
+    color: var(--ink-3);
+    line-height: 1.55;
+    max-width: 46ch;
+  }
+  .score-cta-side {
+    display: flex; flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .score-cta-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 14px;
+    flex-wrap: wrap;
+  }
+  .score-cta-meta .sep {
+    width: 1px; height: 10px; background: var(--line-2);
+  }
+
+  /* ─── MODAL ────────────────────────────────────────── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(11,11,10,0.45);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    max-width: 480px; width: 100%;
+    position: relative;
+    animation: fadeUp 0.28s cubic-bezier(0.2,0.7,0.3,1);
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .modal-head {
+    padding: 12px 18px 12px 22px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .modal-head .live {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--emerald);
+  }
+  .modal-head .live::before {
+    content: ''; width: 6px; height: 6px; background: var(--emerald); border-radius: 50%;
+  }
+  .modal-close {
+    background: none; border: none;
+    color: var(--ink-4);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 4px 6px;
+    border-radius: 3px;
+    transition: background .15s, color .15s;
+  }
+  .modal-close:hover { background: var(--line); color: var(--ink); }
+  .modal-body { padding: 32px 28px 28px; }
+  .modal-body h3 {
+    font-family: var(--head);
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.024em;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.15;
+  }
+  .modal-body p {
+    font-size: 14.5px;
+    color: var(--ink-3);
+    line-height: 1.55;
+    margin-bottom: 22px;
+    max-width: 44ch;
+  }
+  .modal-body .field {
+    margin-bottom: 10px;
+  }
+  .modal-body label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-4);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .modal-body input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--line-2);
+    border-radius: 4px;
+    padding: 12px 14px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 14.5px;
+    outline: none;
+    transition: border-color .15s, background .15s;
+  }
+  .modal-body input:focus {
+    border-color: var(--ink);
+    background: var(--surface);
+  }
+  .modal-body input.error { border-color: var(--ruby); background: var(--ruby-tint); }
+  .modal-body input::placeholder { color: var(--ink-5); }
+  .modal-body .btn { width: 100%; justify-content: center; margin-top: 12px; }
+  .modal-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.02em;
+    margin-top: 14px;
+    text-align: center;
+  }
+  .modal-success { display: none; padding: 40px 28px; text-align: center; }
+  .modal-success .check-big {
+    width: 56px; height: 56px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: var(--emerald-tint);
+    color: var(--emerald);
+    display: grid; place-items: center;
+    border: 1px solid color-mix(in srgb, var(--emerald) 25%, transparent);
+  }
+  .modal-success h3 {
+    font-family: var(--head);
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.022em;
+    margin-bottom: 10px;
+  }
+  .modal-success p {
+    font-size: 14.5px;
+    color: var(--ink-3);
+    line-height: 1.55;
+    max-width: 36ch;
+    margin: 0 auto;
+  }
+  .modal-success a { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+  /* ─── FOOTER ───────────────────────────────────────── */
+  .footer {
+    padding: 36px 0 56px;
+    border-top: 1px solid var(--line);
+  }
+  .footer-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .footer-left {
+    display: flex; align-items: center; gap: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .footer-left .logo-mark { width: 22px; height: 22px; border-radius: 4px; }
+  .footer-left .logo-mark svg { width: 16px; height: 16px; }
+  .footer-right { display: flex; gap: 22px; }
+  .footer-right a {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color .15s;
+  }
+  .footer-right a:hover { color: var(--ink); }
+
+  /* ─── RESPONSIVE ───────────────────────────────────── */
+  @media (max-width: 1000px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .pain-grid { grid-template-columns: 1fr; }
+    .pain-card { border-right: 0; border-bottom: 1px solid var(--line); }
+    .pain-card:last-child { border-bottom: 0; }
+    .steps { grid-template-columns: 1fr; }
+    .step { border-right: 0; border-bottom: 1px solid var(--line); }
+    .step:last-child { border-bottom: 0; }
+    .feat-grid { grid-template-columns: 1fr; }
+    .feat { border-right: 0; border-bottom: 1px solid var(--line); }
+    .feat:last-child { border-bottom: 0; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .plan { border-right: 0; border-bottom: 1px solid var(--line); }
+    .plan:last-child { border-bottom: 0; }
+    .score-cta-card { grid-template-columns: 1fr; gap: 32px; padding: 40px 32px; }
+  }
+  @media (max-width: 640px) {
+    .container { padding: 0 20px; }
+    section { padding: 64px 0; }
+    .nav-links li:nth-child(-n+4) { display: none; }
+    .hero { padding: 48px 0 64px; }
+    .hero h1 { font-size: 42px; }
+    .hero-sub { font-size: 16px; }
+    .pain-card, .step, .feat, .plan { padding: 28px 22px; }
+    .score-cta-card { padding: 32px 22px; }
+    .modal-body { padding: 24px 20px 20px; }
+    .footer-inner { flex-direction: column; align-items: flex-start; }
+  }
+</style>
 </head>
-<body>Redirecting...</body>
+<body>
+<div class="page">
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="logo">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="330 340 360 360" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#20F3BB" d="M513.359 415.214C528.483 414.515 546.271 414.968 561.627 414.968L648.317 414.99C641.267 422.325 633.02 429.488 625.578 436.519C619.933 441.853 613.989 448.07 608.198 453.048L544.83 453.059C535.15 453.083 515.832 452.594 507.123 454.224C496.322 456.224 486.109 460.629 477.241 467.112C453.949 485.455 446.764 506.179 446.893 535.037L408.904 535.012C406.565 472.761 450.135 419.401 513.359 415.214Z"/>
+            <path fill="#20F3BB" d="M577.138 489.434L615.616 489.437C615.63 490.137 615.638 490.837 615.64 491.537C615.674 499.784 615.318 510.106 613.655 518.099C609.195 539.541 597.511 561.455 582.04 576.857C564.167 594.737 540.64 605.857 515.479 608.317C503.67 609.435 487.353 609.003 475.19 609.002L416.75 609.059L377.898 609.095C390.58 596.561 404.553 583.663 417.542 571.351L435.37 571.357L480.388 571.175C509.371 571.104 532.342 573.42 554.931 550.597C572.877 532.465 577.238 513.906 577.138 489.434Z"/>
+            <path fill="#20F3BB" d="M509.71 478.689C527.525 477.105 543.271 490.216 544.94 508.023C546.608 525.83 533.572 541.638 515.773 543.391C497.854 545.156 481.917 532.013 480.237 514.086C478.557 496.159 491.775 480.284 509.71 478.689Z"/>
+          </svg>
+        </span>
+        <span class="logo-name">FlowVigil</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#pain">Problem</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="/score">Scorecard</a></li>
+        <li><a href="#" class="nav-cta" onclick="openModal(); return false;">Join waitlist <span aria-hidden="true">→</span></a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-eyebrow-row">
+          <span class="live-pill">Early access · 2026 cohort</span>
+          <span class="eyebrow" style="margin-bottom:0;">
+            <span class="num">001</span>
+            <span class="bar"></span>
+            <span>Workflow monitoring for agencies</span>
+          </span>
+        </div>
+        <h1>No more <em>silent failures.</em></h1>
+        <p class="hero-sub">Workflow monitoring for no-code automation agencies. One dashboard, every client, every platform. Know before they do — and never again find out from an angry email.</p>
+        <div class="hero-cta-row">
+          <a href="#" class="btn" onclick="openModal(); return false;">
+            <span>Join the waitlist</span>
+            <span class="arrow">→</span>
+          </a>
+          <a href="/score" class="btn btn-ghost">
+            <span>Take the scorecard</span>
+          </a>
+        </div>
+        <p class="hero-note">Free during early access · No credit card required · ~5 min setup</p>
+      </div>
+
+      <aside class="hero-widget" aria-label="Live monitoring preview">
+        <div class="widget-head">
+          <div class="left">
+            <span class="traffic"><span></span><span></span><span></span></span>
+            <span>monitor / all-clients</span>
+          </div>
+          <span>Live</span>
+        </div>
+        <div class="widget-body">
+          <div class="widget-summary">
+            <div class="ws-cell">
+              <div class="ws-label">Workflows</div>
+              <div class="ws-val">142 <span class="delta">+3</span></div>
+            </div>
+            <div class="ws-cell">
+              <div class="ws-label">Health</div>
+              <div class="ws-val">98<span class="unit" style="font-size:13px;color:var(--ink-4);font-family:var(--mono);font-weight:400;">%</span></div>
+            </div>
+            <div class="ws-cell">
+              <div class="ws-label">Incidents · 24h</div>
+              <div class="ws-val">02 <span class="delta down">↑1</span></div>
+            </div>
+          </div>
+          <div class="widget-list">
+            <div class="wl-row">
+              <span class="wl-status ok"></span>
+              <span class="wl-name">Northwind · Lead capture → CRM</span>
+              <span class="wl-meta">Zapier · 18 zaps</span>
+              <span class="wl-val">all clear</span>
+            </div>
+            <div class="wl-row">
+              <span class="wl-status ok"></span>
+              <span class="wl-name">Atlas Partners · Inbox routing</span>
+              <span class="wl-meta">n8n · 6 flows</span>
+              <span class="wl-val">all clear</span>
+            </div>
+            <div class="wl-row">
+              <span class="wl-status warn"></span>
+              <span class="wl-name">Helios Group · Stripe → Notion</span>
+              <span class="wl-meta">Make · 11 scenarios</span>
+              <span class="wl-val">2 retries</span>
+            </div>
+            <div class="wl-row">
+              <span class="wl-status crit"></span>
+              <span class="wl-name">Vector Studio · HubSpot webhook</span>
+              <span class="wl-meta">Zapier · 1 zap</span>
+              <span class="wl-val crit">timeout</span>
+            </div>
+            <div class="wl-row">
+              <span class="wl-status ok"></span>
+              <span class="wl-name">Briar &amp; Co · Calendly sync</span>
+              <span class="wl-meta">n8n · 4 flows</span>
+              <span class="wl-val">all clear</span>
+            </div>
+          </div>
+        </div>
+        <div class="widget-foot">
+          <span>Updated 12s ago</span>
+          <span>SFS-A1 · uswest-2</span>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- PAIN -->
+  <section id="pain">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow"><span class="num">02</span><span class="bar"></span><span>The problem</span></div>
+        <h2 class="section-title">You shouldn't find out from your <em>client.</em></h2>
+        <p class="section-lede">Most agencies are running their monitoring on goodwill and morning coffee. It works — right up until it doesn't, and a single uncovered workflow becomes the reason a retainer ends.</p>
+      </div>
+      <div class="pain-grid">
+        <div class="pain-card">
+          <span class="pain-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          </span>
+          <h3>The morning crawl</h3>
+          <p>45 minutes every day logging into 20+ accounts just to confirm everything is still running. Before you've even had coffee.</p>
+        </div>
+        <div class="pain-card">
+          <span class="pain-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </span>
+          <h3>The overnight anxiety</h3>
+          <p>A workflow broke at 2am. Your client's leads stopped flowing. You won't find out until they email you — angry, confused, questioning the retainer.</p>
+        </div>
+        <div class="pain-card">
+          <span class="pain-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+          <h3>The silent revenue leak</h3>
+          <p>One silent failure. Three days of dropped leads. A client who trusted you now asking "what exactly are we paying you for?"</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how" style="background: var(--surface-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow"><span class="num">03</span><span class="bar"></span><span>How it works</span></div>
+        <h2 class="section-title">Live in 5 minutes. Vigilant forever.</h2>
+        <p class="section-lede">Three steps from running blind to running a real operation. No agents to install, no SDKs to maintain — FlowVigil reads from the platforms you already use.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-head">
+            <span class="step-num"><strong>01</strong> · Step</span>
+            <span class="step-time">~1 min</span>
+          </div>
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </span>
+          <h3>Connect</h3>
+          <p>Paste your Zapier API key or connect n8n. FlowVigil automatically detects every active workflow across every client.</p>
+        </div>
+        <div class="step">
+          <div class="step-head">
+            <span class="step-num"><strong>02</strong> · Step</span>
+            <span class="step-time">~2 min</span>
+          </div>
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+          <h3>Monitor</h3>
+          <p>Every workflow, every client, one dashboard. FlowVigil watches 24/7 and alerts you instantly when something breaks.</p>
+        </div>
+        <div class="step">
+          <div class="step-head">
+            <span class="step-num"><strong>03</strong> · Step</span>
+            <span class="step-time">~2 min</span>
+          </div>
+          <span class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </span>
+          <h3>Protect</h3>
+          <p>Branded status pages and weekly health reports make you look like a serious operation. Retainers justified, clients impressed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section id="features">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow"><span class="num">04</span><span class="bar"></span><span>What you get</span></div>
+        <h2 class="section-title">Everything an agency needs. Nothing it doesn't.</h2>
+        <p class="section-lede">Built for operators, not enterprise procurement. Every feature in FlowVigil is one an agency owner asked for after losing a retainer they shouldn't have.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="feat">
+          <div class="feat-head">
+            <span class="feat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+            </span>
+            <span class="feat-label">F.01</span>
+          </div>
+          <h3>Unified dashboard</h3>
+          <p>All clients, all workflows, all platforms — Zapier, n8n, Make — in one real-time view. No more tab-hopping between 20 accounts every morning.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-head">
+            <span class="feat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            </span>
+            <span class="feat-label">F.02</span>
+          </div>
+          <h3>Instant alerts</h3>
+          <p>Slack, email, or webhook — the moment a workflow fails, you know. Before the client notices. Before leads start dropping.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-head">
+            <span class="feat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+            </span>
+            <span class="feat-label">F.03</span>
+          </div>
+          <h3>White-label status pages</h3>
+          <p>Branded client-facing pages with your logo, your colors, your URL. Your client sees a professional monitoring dashboard — not a duct-taped Zap.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-head">
+            <span class="feat-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+            </span>
+            <span class="feat-label">F.04</span>
+          </div>
+          <h3>Weekly health reports</h3>
+          <p>Automated PDF reports sent to clients every Monday morning. "Here's what ran, here's what we caught, here's what we fixed." Retainer justified.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" style="background: var(--surface-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);">
+    <div class="container">
+      <div class="pricing-head">
+        <div class="eyebrow"><span class="num">05</span><span class="bar"></span><span>Pricing</span></div>
+        <h2 class="section-title">Protect your retainers for less than one hour of your time.</h2>
+        <p class="section-lede">All plans include alerts, dashboard, status pages, and reports. Billed monthly, cancel anytime. Annual saves 20%.</p>
+      </div>
+      <div class="pricing-grid">
+
+        <div class="plan">
+          <div class="plan-tag">
+            <span class="plan-name">Starter</span>
+          </div>
+          <p class="plan-desc">For growing agencies dialing in their first monitoring system.</p>
+          <div class="plan-price">$99 <span class="unit">/mo</span></div>
+          <div class="plan-period">Billed monthly · USD</div>
+          <ul class="plan-features">
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Up to 50 workflows</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> 5–15 client accounts</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Slack &amp; email alerts</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> 1 white-label status page</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Weekly health report</li>
+          </ul>
+          <a href="#" class="plan-btn" onclick="openModal(); return false;">Join waitlist</a>
+        </div>
+
+        <div class="plan featured">
+          <div class="plan-tag">
+            <span class="plan-name">Agency</span>
+            <span class="plan-pop">Most popular</span>
+          </div>
+          <p class="plan-desc">For established agencies running real retainer revenue.</p>
+          <div class="plan-price">$249 <span class="unit">/mo</span></div>
+          <div class="plan-period">Billed monthly · USD</div>
+          <ul class="plan-features">
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Up to 150 workflows</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> 15–40 client accounts</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Slack, email + webhook alerts</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Unlimited status pages</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Weekly + monthly reports</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Priority support</li>
+          </ul>
+          <a href="#" class="plan-btn" onclick="openModal(); return false;">Join waitlist →</a>
+        </div>
+
+        <div class="plan">
+          <div class="plan-tag">
+            <span class="plan-name">Pro</span>
+          </div>
+          <p class="plan-desc">For large agencies and operators-of-record.</p>
+          <div class="plan-price">$499 <span class="unit">/mo</span></div>
+          <div class="plan-period">Billed monthly · USD</div>
+          <ul class="plan-features">
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Unlimited workflows</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> 40+ client accounts</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> All alert channels</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Unlimited status pages</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Custom reports + branding</li>
+            <li><svg class="check" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5L5.5 10L11 4.5"/></svg> Dedicated onboarding</li>
+          </ul>
+          <a href="#" class="plan-btn" onclick="openModal(); return false;">Join waitlist</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SCORECARD CTA -->
+  <section class="score-cta">
+    <div class="container">
+      <div class="score-cta-card">
+        <div>
+          <div class="eyebrow"><span class="num">06</span><span class="bar"></span><span>Diagnostic</span></div>
+          <h2>How exposed is your agency <em>right now?</em></h2>
+          <p>Take the Silent Failure Scorecard — 10 questions, 5 minutes, instant score. Find out exactly how many of your client workflows are running blind, then see a section-by-section breakdown of where to start.</p>
+        </div>
+        <div class="score-cta-side">
+          <a href="/score" class="btn">
+            <span>Take the scorecard</span>
+            <span class="arrow">→</span>
+          </a>
+          <div class="score-cta-meta">
+            <span>10 questions</span>
+            <span class="sep"></span>
+            <span>~5 min</span>
+            <span class="sep"></span>
+            <span>Free</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-left">
+        <span class="logo-mark" aria-hidden="true">
+          <svg viewBox="330 340 360 360" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#20F3BB" d="M513.359 415.214C528.483 414.515 546.271 414.968 561.627 414.968L648.317 414.99C641.267 422.325 633.02 429.488 625.578 436.519C619.933 441.853 613.989 448.07 608.198 453.048L544.83 453.059C535.15 453.083 515.832 452.594 507.123 454.224C496.322 456.224 486.109 460.629 477.241 467.112C453.949 485.455 446.764 506.179 446.893 535.037L408.904 535.012C406.565 472.761 450.135 419.401 513.359 415.214Z"/>
+            <path fill="#20F3BB" d="M577.138 489.434L615.616 489.437C615.63 490.137 615.638 490.837 615.64 491.537C615.674 499.784 615.318 510.106 613.655 518.099C609.195 539.541 597.511 561.455 582.04 576.857C564.167 594.737 540.64 605.857 515.479 608.317C503.67 609.435 487.353 609.003 475.19 609.002L416.75 609.059L377.898 609.095C390.58 596.561 404.553 583.663 417.542 571.351L435.37 571.357L480.388 571.175C509.371 571.104 532.342 573.42 554.931 550.597C572.877 532.465 577.238 513.906 577.138 489.434Z"/>
+            <path fill="#20F3BB" d="M509.71 478.689C527.525 477.105 543.271 490.216 544.94 508.023C546.608 525.83 533.572 541.638 515.773 543.391C497.854 545.156 481.917 532.013 480.237 514.086C478.557 496.159 491.775 480.284 509.71 478.689Z"/>
+          </svg>
+        </span>
+        <span>FlowVigil — No more silent failures.</span>
+        <span>© 2026</span>
+      </div>
+      <div class="footer-right">
+        <a href="/score">Scorecard</a>
+        <a href="/cdn-cgi/l/email-protection#1c74797070735c7a70736b6a757b7570327f7371">Contact</a>
+        <a href="https://x.com/flowvigil" target="_blank" rel="noopener">X / Twitter</a>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- WAITLIST MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-head">
+      <span class="live">Early access · Open</span>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-form">
+      <h3>Get early access</h3>
+      <p>Join the FlowVigil waitlist — we'll notify you when we launch, and early signups get 3 months free on any plan.</p>
+      <div class="field">
+        <label for="wl-name">Your name</label>
+        <input type="text" id="wl-name" placeholder="Alex Morgan" />
+      </div>
+      <div class="field">
+        <label for="wl-email">Work email</label>
+        <input type="email" id="wl-email" placeholder="you@youragency.com" />
+      </div>
+      <div class="field">
+        <label for="wl-clients">Clients under management</label>
+        <input type="text" id="wl-clients" placeholder="e.g. 12" />
+      </div>
+      <button class="btn" onclick="submitWaitlist()">
+        <span>Join the waitlist</span>
+        <span class="arrow">→</span>
+      </button>
+      <p class="modal-note">No spam · Unsubscribe anytime</p>
+    </div>
+    <div class="modal-success" id="modal-success">
+      <div class="check-big" aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <h3>You're on the list.</h3>
+      <p>We'll reach out soon with early-access details. In the meantime, <a href="/score">take the scorecard</a> to see how exposed your agency is right now.</p>
+    </div>
+  </div>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+function openModal() {
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal')) return;
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function submitWaitlist() {
+  const name = document.getElementById('wl-name').value.trim();
+  const email = document.getElementById('wl-email').value.trim();
+  const clients = document.getElementById('wl-clients').value.trim();
+
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    document.getElementById('wl-email').classList.add('error');
+    return;
+  }
+
+  // Send to your backend (wire up in Phase 4 with Resend/Supabase)
+  fetch('/api/waitlist', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, clients, timestamp: new Date().toISOString() })
+  }).catch(() => {});
+
+  document.getElementById('modal-form').style.display = 'none';
+  document.getElementById('modal-success').style.display = 'block';
+}
+</script>
+</body>
 </html>
