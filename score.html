@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Silent Failure Scorecard — FlowVigil</title>
+<meta name="description" content="How many of your client workflows are running blind right now? Find out in 5 minutes.">
+<meta property="og:title" content="The Silent Failure Scorecard — FlowVigil">
+<meta property="og:description" content="How many of your client workflows are running blind? Free 5-minute scorecard for automation agencies.">
+<meta property="og:url" content="https://flowvigil.com/score">
+<link rel="canonical" href="https://flowvigil.com/score">
+<link rel="icon" type="image/svg+xml" href="assets/flowvigil-logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Surfaces */
+    --bg:       #f6f6f3;        /* warm off-white page */
+    --surface:  #ffffff;        /* card */
+    --surface-2:#fbfbf9;        /* nested */
+    --line:     #e6e5df;        /* hairline border */
+    --line-2:   #d6d5cd;        /* slightly stronger */
+    --line-3:   #c2c1b8;        /* used for hover */
+
+    /* Ink scale */
+    --ink:      #0b0b0a;        /* primary text / primary button */
+    --ink-2:    #1a1a18;
+    --ink-3:    #3a3a36;        /* secondary text */
+    --ink-4:    #6b6b64;        /* tertiary / muted */
+    --ink-5:    #97968c;        /* hint */
+
+    /* Semantic */
+    --emerald:  #047857;
+    --emerald-tint: #ecf6f1;
+    --amber:    #b45309;
+    --amber-tint:#fbf3e6;
+    --ruby:     #b91c1c;
+    --ruby-tint:#fbebea;
+    --indigo:   #1e3a8a;
+    --indigo-tint:#eef0fb;
+
+    /* Type */
+    --sans:  'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --head:  'Space Grotesk', 'Inter', sans-serif;
+    --mono:  'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  }
+
+  html, body { background: var(--bg); }
+
+  body {
+    color: var(--ink);
+    font-family: var(--sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* faint grid texture — barely there, premium */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgba(11,11,10,0.025) 1px, transparent 1px);
+    background-size: 96px 100%;
+    mask-image: linear-gradient(to bottom, transparent, #000 120px, #000 calc(100% - 120px), transparent);
+  }
+
+  .frame {
+    position: relative; z-index: 1;
+    max-width: 1120px; margin: 0 auto;
+    padding: 24px 32px 80px;
+  }
+
+  /* ─── NAV ─────────────────────────────────────────── */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 0 18px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 56px;
+  }
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none; color: var(--ink);
+  }
+  .logo-mark {
+    width: 30px; height: 30px;
+    background: #131421;
+    border-radius: 6px;
+    display: grid; place-items: center;
+    overflow: hidden;
+  }
+  .logo-mark svg { width: 22px; height: 22px; display: block; }
+  .logo-name {
+    font-family: var(--head);
+    font-size: 16px; font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  .nav-meta {
+    display: flex; align-items: center; gap: 24px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.02em;
+  }
+  .nav-meta a {
+    color: var(--ink-3);
+    text-decoration: none;
+    transition: color .15s;
+  }
+  .nav-meta a:hover { color: var(--ink); }
+  .nav-meta .sep {
+    width: 1px; height: 12px; background: var(--line-2);
+  }
+  .live-dot {
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .live-dot::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--emerald); border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(4,120,87,0.12);
+    animation: pulse 2.2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+
+  /* ─── INTRO ────────────────────────────────────────── */
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    gap: 56px;
+    align-items: start;
+  }
+
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .eyebrow .num {
+    color: var(--ink-5);
+  }
+  .eyebrow .bar {
+    width: 32px; height: 1px; background: var(--line-2);
+  }
+
+  h1.hero {
+    font-family: var(--head);
+    font-size: clamp(40px, 5.8vw, 64px);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    margin-bottom: 24px;
+    max-width: 18ch;
+  }
+  h1.hero em {
+    font-style: normal;
+    font-weight: 500;
+    color: var(--ink);
+    background-image: linear-gradient(transparent 62%, rgba(180, 83, 9, 0.28) 62%, rgba(180, 83, 9, 0.28) 86%, transparent 86%);
+    padding: 0 0.04em;
+  }
+
+  .lede {
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-3);
+    max-width: 48ch;
+    margin-bottom: 36px;
+  }
+
+  .cta-row {
+    display: flex; align-items: center; gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  /* ── Diagnostic side panel ── */
+  .diag-panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .diag-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+  .diag-head-title {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--ink-3);
+  }
+  .diag-head-id {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-5);
+  }
+  .diag-body { padding: 18px 16px 4px; }
+  .diag-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 13px;
+  }
+  .diag-row:last-child { border-bottom: 0; }
+  .diag-k {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .diag-v {
+    font-family: var(--head);
+    font-weight: 500;
+    color: var(--ink);
+    font-size: 14px;
+    letter-spacing: -0.01em;
+  }
+  .diag-v.mono {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  .diag-foot {
+    padding: 12px 16px;
+    border-top: 1px solid var(--line);
+    background: var(--surface-2);
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── Stats widgets ── */
+  .stats-grid {
+    margin-top: 64px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .stat-cell {
+    padding: 24px 26px;
+    border-right: 1px solid var(--line);
+    position: relative;
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .stat-tag {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .stat-spark {
+    display: flex; align-items: flex-end; gap: 2px; height: 14px;
+  }
+  .stat-spark span {
+    width: 3px;
+    background: var(--ink-5);
+    border-radius: 1px;
+  }
+  .stat-num {
+    font-family: var(--head);
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .stat-num .unit {
+    font-size: 18px;
+    color: var(--ink-4);
+    margin-left: 4px;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: var(--ink-3);
+    line-height: 1.45;
+    max-width: 28ch;
+  }
+  .stat-source {
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-5);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── BUTTONS ──────────────────────────────────────── */
+  .btn {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: #fff;
+    padding: 13px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: background .14s, transform .08s, border-color .14s;
+    text-decoration: none;
+  }
+  .btn:hover { background: var(--ink-2); }
+  .btn:active { transform: translateY(1px); }
+  .btn .arrow {
+    display: inline-block;
+    transition: transform .15s;
+  }
+  .btn:hover .arrow { transform: translateX(2px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-2);
+  }
+  .btn-ghost:hover {
+    background: var(--surface);
+    border-color: var(--ink);
+  }
+
+  .meta-note {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-4);
+    letter-spacing: 0.02em;
+  }
+
+  /* ─── QUIZ ─────────────────────────────────────────── */
+  .quiz-container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .quiz-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 18px;
+    gap: 24px;
+  }
+  .quiz-section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .quiz-section-label .dot {
+    width: 6px; height: 6px;
+    background: var(--ink);
+    border-radius: 50%;
+  }
+  .quiz-progress-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .quiz-progress-num strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .progress-wrap {
+    margin-bottom: 40px;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--ink);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .progress-segments {
+    margin-top: 8px;
+    display: grid;
+    grid-template-columns: 3fr 3fr 4fr;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-5);
+  }
+  .progress-segments span {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .progress-segments span::before {
+    content: ''; width: 6px; height: 1px; background: var(--line-2);
+  }
+  .progress-segments span.done { color: var(--ink-3); }
+  .progress-segments span.done::before { background: var(--ink); }
+  .progress-segments span.active { color: var(--ink); }
+  .progress-segments span.active::before { background: var(--ink); }
+
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 36px 36px 28px;
+    display: none;
+    animation: fadeUp 0.32s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .question-card.active { display: block; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-bottom: 18px;
+    padding: 4px 9px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+  }
+  .section-badge::before {
+    content: ''; width: 5px; height: 5px;
+    background: var(--ink); border-radius: 50%;
+  }
+
+  .q-number {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+
+  .q-text {
+    font-family: var(--head);
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.18;
+    letter-spacing: -0.022em;
+    color: var(--ink);
+    margin-bottom: 28px;
+    max-width: 28ch;
+  }
+
+  .options {
+    display: flex; flex-direction: column;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .option {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    cursor: pointer;
+    background: var(--surface);
+    text-align: left;
+    width: 100%;
+    color: var(--ink-2);
+    font-family: var(--sans);
+    font-size: 14.5px;
+    line-height: 1.45;
+    transition: border-color .12s, background .12s, transform .08s;
+    position: relative;
+  }
+  .option:hover {
+    border-color: var(--line-3);
+    background: var(--surface-2);
+  }
+  .option:active { transform: translateY(0.5px); }
+
+  .option.selected {
+    border-color: var(--ink);
+    background: var(--surface-2);
+    box-shadow: inset 3px 0 0 0 var(--ink);
+    padding-left: 21px;
+  }
+  .option.selected .option-radio {
+    border-color: var(--ink);
+    background: var(--ink);
+  }
+  .option.selected .option-radio::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14' fill='none'><path d='M3 7.5L5.5 10L11 4.5' stroke='%23ffffff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 12px;
+  }
+
+  .option-radio {
+    width: 18px; height: 18px; min-width: 18px;
+    border: 1.5px solid var(--line-3);
+    border-radius: 3px;
+    margin-top: 1px;
+    flex-shrink: 0;
+    position: relative;
+    transition: border-color .12s, background .12s;
+  }
+
+  .nav-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+  .q-hint {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-4);
+    letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .q-hint .kbd {
+    display: inline-block;
+    padding: 2px 6px;
+    border: 1px solid var(--line-2);
+    border-radius: 3px;
+    font-size: 10px;
+    color: var(--ink-3);
+    background: var(--surface-2);
+  }
+
+  .btn-next {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    font-weight: 500;
+    background: var(--ink);
+    color: #fff;
+    border: 1px solid var(--ink);
+    padding: 11px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0.32;
+    pointer-events: none;
+    transition: opacity .15s, background .15s, transform .08s;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-next.enabled { opacity: 1; pointer-events: all; }
+  .btn-next.enabled:hover { background: var(--ink-2); }
+  .btn-next:active { transform: translateY(1px); }
+  .btn-next .arrow { transition: transform .15s; }
+  .btn-next.enabled:hover .arrow { transform: translateX(2px); }
+
+  /* ─── EMAIL GATE ───────────────────────────────────── */
+  #email-gate {
+    display: none;
+    max-width: 560px; margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    animation: fadeUp 0.32s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .gate-head {
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-2);
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .gate-head .ok {
+    color: var(--emerald);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .gate-head .ok::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--emerald); border-radius: 50%;
+  }
+  .gate-body {
+    padding: 36px 32px 32px;
+  }
+  #email-gate h2 {
+    font-family: var(--head);
+    font-size: 30px;
+    font-weight: 500;
+    letter-spacing: -0.028em;
+    margin-bottom: 12px;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  #email-gate p {
+    color: var(--ink-3);
+    font-size: 15px;
+    line-height: 1.55;
+    margin-bottom: 24px;
+    max-width: 46ch;
+  }
+  .gate-input-row {
+    display: flex; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .email-input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--line-2);
+    border-radius: 4px;
+    padding: 13px 16px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 14.5px;
+    outline: none;
+    transition: border-color .15s, background .15s;
+  }
+  .email-input:focus {
+    border-color: var(--ink);
+    background: var(--surface);
+  }
+  .email-input.error { border-color: var(--ruby); background: var(--ruby-tint); }
+  .email-input::placeholder { color: var(--ink-5); }
+
+  .btn-reveal {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    background: var(--ink);
+    color: #fff;
+    border: 1px solid var(--ink);
+    padding: 0 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background .15s, transform .08s;
+    display: inline-flex; align-items: center; gap: 10px;
+    white-space: nowrap;
+  }
+  .btn-reveal:hover { background: var(--ink-2); }
+  .btn-reveal:active { transform: translateY(1px); }
+  .gate-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 14px;
+    flex-wrap: wrap;
+  }
+  .gate-note .sep { width: 1px; height: 10px; background: var(--line-2); }
+
+  /* ─── RESULT ──────────────────────────────────────── */
+  #result { display: none; animation: fadeUp 0.4s ease; max-width: 1080px; margin: 0 auto; }
+
+  .report-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 22px;
+    border: 1px solid var(--line);
+    border-bottom: 0;
+    border-radius: 6px 6px 0 0;
+    background: var(--surface-2);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .report-head .left { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .report-head .right { color: var(--ink-5); }
+  .report-head .sep { width: 1px; height: 10px; background: var(--line-2); display: inline-block; }
+
+  .result-hero {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 0;
+    border-radius: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1.05fr 1.6fr;
+    overflow: hidden;
+  }
+
+  .result-hero .score-col {
+    padding: 36px 36px 32px;
+    border-right: 1px solid var(--line);
+    position: relative;
+    background: var(--surface);
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .result-hero .score-col::after {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 3px;
+    background: var(--accent, var(--ink));
+  }
+  .result-hero .score-col .score-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+  }
+  .score-display {
+    font-family: var(--head);
+    font-size: clamp(72px, 11vw, 104px);
+    font-weight: 500;
+    line-height: 0.95;
+    letter-spacing: -0.05em;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .score-max {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-4);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 28px;
+  }
+  .score-bar {
+    height: 6px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  .score-bar-fill {
+    height: 100%;
+    background: var(--accent, var(--ink));
+    border-radius: 2px;
+    width: 0%;
+    transition: width 1.1s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .score-bar-ticks {
+    position: absolute; inset: 0; pointer-events: none;
+    display: flex;
+  }
+  .score-bar-ticks span {
+    flex: 1;
+    border-right: 1px solid var(--bg);
+  }
+  .score-bar-ticks span:last-child { border-right: 0; }
+  .score-tier-row {
+    margin-top: 14px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .result-hero .copy-col {
+    padding: 36px 38px 32px;
+  }
+  .result-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent, var(--ink));
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    padding: 4px 10px;
+    background: var(--accent-tint, var(--surface-2));
+    border: 1px solid color-mix(in srgb, var(--accent, var(--ink)) 22%, transparent);
+    border-radius: 3px;
+    margin-bottom: 18px;
+  }
+  .result-badge::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--accent, var(--ink));
+    border-radius: 50%;
+  }
+  .result-title {
+    font-family: var(--head);
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: -0.026em;
+    line-height: 1.16;
+    color: var(--ink);
+    margin-bottom: 14px;
+    max-width: 24ch;
+  }
+  .result-desc {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-3);
+    max-width: 56ch;
+  }
+
+  /* breakdown */
+  .breakdown {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 0;
+    padding: 0;
+  }
+  .breakdown-head {
+    padding: 12px 22px;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface-2);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .breakdown-rows { padding: 8px 0; }
+  .section-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 80px 80px;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 22px;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-row:last-child { border-bottom: 0; }
+  .section-name {
+    font-family: var(--head);
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-name .ix {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-5);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+  }
+  .bar-wrap {
+    height: 6px;
+    background: var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 1s cubic-bezier(0.65, 0, 0.35, 1);
+    width: 0%;
+  }
+  .section-pct {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-4);
+    text-align: right;
+    letter-spacing: 0.02em;
+  }
+  .section-val {
+    font-family: var(--head);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    text-align: right;
+    letter-spacing: -0.02em;
+  }
+  .section-val .of {
+    color: var(--ink-5);
+    font-family: var(--mono);
+    font-size: 11px;
+    margin-left: 3px;
+    font-weight: 400;
+  }
+
+  /* CTA */
+  .cta-card {
+    background: var(--ink);
+    color: #fff;
+    border: 1px solid var(--ink);
+    border-radius: 0 0 6px 6px;
+    padding: 36px 38px;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    align-items: center;
+    gap: 32px;
+  }
+  .cta-card .copy h3 {
+    font-family: var(--head);
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.022em;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    color: #fff;
+  }
+  .cta-card .copy p {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.65);
+    max-width: 52ch;
+  }
+  .cta-card .actions {
+    display: flex; flex-direction: column; gap: 12px;
+    align-items: flex-start;
+  }
+  .btn-cta {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid #fff;
+    padding: 13px 22px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .15s, color .15s, transform .08s;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .btn-cta:hover { background: #f3f3ef; }
+  .btn-cta:active { transform: translateY(1px); }
+  .btn-cta .arrow { transition: transform .15s; }
+  .btn-cta:hover .arrow { transform: translateX(2px); }
+
+  .share-line {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .share-btn {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    background: none; border: none;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    cursor: pointer;
+    padding: 0;
+  }
+  .share-btn:hover { color: #fff; opacity: 0.85; }
+
+  /* footer */
+  .footer {
+    margin-top: 56px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-4);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .footer a { color: var(--ink-3); text-decoration: none; }
+  .footer a:hover { color: var(--ink); }
+
+  /* ─── RESPONSIVE ───────────────────────────────────── */
+  @media (max-width: 900px) {
+    .frame { padding: 20px 20px 60px; }
+    .intro-grid { grid-template-columns: 1fr; gap: 36px; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .stat-cell { border-right: none; border-bottom: 1px solid var(--line); }
+    .stat-cell:last-child { border-bottom: none; }
+    .result-hero { grid-template-columns: 1fr; }
+    .result-hero .score-col { border-right: none; border-bottom: 1px solid var(--line); }
+    .cta-card { grid-template-columns: 1fr; }
+    .section-row { grid-template-columns: 1fr 70px 70px; gap: 12px; }
+    .section-row .bar-wrap { grid-column: 1 / -1; order: 3; }
+    .section-name { grid-column: 1; }
+    .section-pct { grid-column: 2; }
+    .section-val { grid-column: 3; }
+  }
+  @media (max-width: 560px) {
+    .frame { padding: 16px 16px 48px; }
+    .nav-meta { gap: 14px; }
+    .nav-meta .sep, .nav-meta .hide-mobile { display: none; }
+    h1.hero { font-size: 38px; }
+    .question-card { padding: 24px 22px 22px; }
+    .gate-input-row { flex-direction: column; }
+    .btn-reveal { padding: 13px 20px; justify-content: center; }
+    .report-head { padding: 12px 16px; }
+    .result-hero .score-col, .result-hero .copy-col { padding: 26px 22px; }
+    .cta-card { padding: 26px 22px; }
+    .score-display { font-size: 72px; }
+    .section-row { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="https://flowvigil.com" class="logo">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="330 340 360 360" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#20F3BB" d="M513.359 415.214C528.483 414.515 546.271 414.968 561.627 414.968L648.317 414.99C641.267 422.325 633.02 429.488 625.578 436.519C619.933 441.853 613.989 448.07 608.198 453.048L544.83 453.059C535.15 453.083 515.832 452.594 507.123 454.224C496.322 456.224 486.109 460.629 477.241 467.112C453.949 485.455 446.764 506.179 446.893 535.037L408.904 535.012C406.565 472.761 450.135 419.401 513.359 415.214Z"/>
+          <path fill="#20F3BB" d="M577.138 489.434L615.616 489.437C615.63 490.137 615.638 490.837 615.64 491.537C615.674 499.784 615.318 510.106 613.655 518.099C609.195 539.541 597.511 561.455 582.04 576.857C564.167 594.737 540.64 605.857 515.479 608.317C503.67 609.435 487.353 609.003 475.19 609.002L416.75 609.059L377.898 609.095C390.58 596.561 404.553 583.663 417.542 571.351L435.37 571.357L480.388 571.175C509.371 571.104 532.342 573.42 554.931 550.597C572.877 532.465 577.238 513.906 577.138 489.434Z"/>
+          <path fill="#20F3BB" d="M509.71 478.689C527.525 477.105 543.271 490.216 544.94 508.023C546.608 525.83 533.572 541.638 515.773 543.391C497.854 545.156 481.917 532.013 480.237 514.086C478.557 496.159 491.775 480.284 509.71 478.689Z"/>
+        </svg>
+      </span>
+      <span class="logo-name">FlowVigil</span>
+    </a>
+    <div class="nav-meta">
+      <span class="live-dot hide-mobile">All systems nominal</span>
+      <span class="sep hide-mobile"></span>
+      <a href="https://flowvigil.com">flowvigil.com ↗</a>
+    </div>
+  </nav>
+
+  <!-- INTRO -->
+  <div id="intro">
+    <div class="intro-grid">
+      <div>
+        <div class="eyebrow">
+          <span class="num">001</span>
+          <span class="bar"></span>
+          <span>Silent Failure Scorecard</span>
+        </div>
+        <h1 class="hero">How exposed is your agency to <em>silent failures</em>?</h1>
+        <p class="lede">A 10-question diagnostic for automation agencies and freelancers managing client workflows on Zapier, n8n, Make and bespoke stacks. Get an instant Agency Monitoring Score with section-by-section breakdown.</p>
+        <div class="cta-row">
+          <button class="btn" onclick="startQuiz()">
+            <span>Begin assessment</span>
+            <span class="arrow">→</span>
+          </button>
+          <span class="meta-note">10 questions · ~5 minutes · email required for score</span>
+        </div>
+      </div>
+
+      <aside class="diag-panel" aria-label="Diagnostic overview">
+        <div class="diag-head">
+          <span class="diag-head-title">Diagnostic · Overview</span>
+          <span class="diag-head-id">SFS-v1.4</span>
+        </div>
+        <div class="diag-body">
+          <div class="diag-row">
+            <span class="diag-k">Sections</span>
+            <span class="diag-v mono">03</span>
+          </div>
+          <div class="diag-row">
+            <span class="diag-k">Questions</span>
+            <span class="diag-v mono">10</span>
+          </div>
+          <div class="diag-row">
+            <span class="diag-k">Max score</span>
+            <span class="diag-v mono">30</span>
+          </div>
+          <div class="diag-row">
+            <span class="diag-k">Avg. duration</span>
+            <span class="diag-v mono">04:32</span>
+          </div>
+          <div class="diag-row">
+            <span class="diag-k">Audience</span>
+            <span class="diag-v">Automation agencies</span>
+          </div>
+        </div>
+        <div class="diag-foot">
+          <span>Last calibrated</span>
+          <span>2026-05</span>
+        </div>
+      </aside>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-cell">
+        <div class="stat-cell-head">
+          <span class="stat-tag">Discovery lag</span>
+          <span class="stat-spark"><span style="height:30%"></span><span style="height:55%"></span><span style="height:80%"></span><span style="height:60%"></span><span style="height:95%"></span></span>
+        </div>
+        <span class="stat-num">73<span class="unit">%</span></span>
+        <span class="stat-label">of agencies find out a workflow broke from the client first</span>
+        <div class="stat-source">Source · FlowVigil 2025 survey</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell-head">
+          <span class="stat-tag">Manual overhead</span>
+          <span class="stat-spark"><span style="height:50%"></span><span style="height:65%"></span><span style="height:45%"></span><span style="height:80%"></span><span style="height:70%"></span></span>
+        </div>
+        <span class="stat-num">45<span class="unit">min</span></span>
+        <span class="stat-label">average morning dashboard crawl across client accounts</span>
+        <div class="stat-source">Source · Practitioner interviews · n=42</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-cell-head">
+          <span class="stat-tag">Retention risk</span>
+          <span class="stat-spark"><span style="height:90%"></span><span style="height:90%"></span><span style="height:90%"></span><span style="height:90%"></span><span style="height:90%"></span></span>
+        </div>
+        <span class="stat-num">1</span>
+        <span class="stat-label">silent failure is often all it takes to lose a retainer</span>
+        <div class="stat-source">Source · Churn case studies</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz" style="display:none;">
+    <div class="quiz-container">
+      <div class="progress-wrap">
+        <div class="quiz-head">
+          <div class="quiz-section-label" id="quiz-section-label">
+            <span class="dot"></span>
+            <span id="quiz-section-name">Visibility</span>
+          </div>
+          <div class="quiz-progress-num">
+            <span id="progress-label">0 / 10</span>
+          </div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <div class="progress-segments" id="progress-segments">
+          <span data-section="A">A · Visibility</span>
+          <span data-section="B">B · Speed</span>
+          <span data-section="C">C · Professionalism</span>
+        </div>
+      </div>
+      <div id="questions-container"></div>
+    </div>
+  </div>
+
+  <!-- EMAIL GATE -->
+  <div id="email-gate">
+    <div class="gate-head">
+      <span class="ok">Assessment complete</span>
+      <span>10 / 10 answered</span>
+    </div>
+    <div class="gate-body">
+      <h2>Your score is ready.</h2>
+      <p>Enter your work email to reveal your Agency Monitoring Score and section-by-section breakdown. We'll also send a copy for your records — no spam, no list rental, unsubscribe anytime.</p>
+      <div class="gate-input-row">
+        <input type="email" class="email-input" id="email-input" placeholder="you@youragency.com" />
+        <button class="btn-reveal" onclick="revealResult()">
+          <span>Reveal score</span>
+          <span class="arrow">→</span>
+        </button>
+      </div>
+      <div class="gate-note">
+        <span>No spam</span>
+        <span class="sep"></span>
+        <span>Unsubscribe anytime</span>
+        <span class="sep"></span>
+        <span>SOC 2 type II</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result"></div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <a href="https://flowvigil.com">FlowVigil — No more silent failures.</a>
+    <span>© 2026 · v1.4</span>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    section: "Section A — Visibility",
+    text: "How do you currently monitor your client workflows?",
+    options: [
+      { text: "I log into each client account manually every day", pts: 0 },
+      { text: "I rely on Zapier / n8n's native error emails", pts: 1 },
+      { text: "I have a partial system but it doesn't cover all clients", pts: 2 },
+      { text: "I have a unified dashboard showing all clients in real time", pts: 3 }
+    ]
+  },
+  {
+    section: "Section A — Visibility",
+    text: "How many client workflow accounts do you check manually per week?",
+    options: [
+      { text: "More than 20 accounts", pts: 0 },
+      { text: "11–20 accounts", pts: 1 },
+      { text: "6–10 accounts", pts: 2 },
+      { text: "5 or fewer accounts", pts: 3 }
+    ]
+  },
+  {
+    section: "Section A — Visibility",
+    text: "How often do you discover a workflow failure BEFORE the client tells you?",
+    options: [
+      { text: "Rarely or never — the client usually tells me first", pts: 0 },
+      { text: "Sometimes — maybe half the time", pts: 1 },
+      { text: "Most of the time", pts: 2 },
+      { text: "Always — I always know before the client does", pts: 3 }
+    ]
+  },
+  {
+    section: "Section B — Speed",
+    text: "How quickly do you typically find out when a client workflow breaks?",
+    options: [
+      { text: "Hours or days later", pts: 0 },
+      { text: "Within the hour, if I happen to check", pts: 1 },
+      { text: "Within 30 minutes via alerts", pts: 2 },
+      { text: "Instantly — I get notified the moment it fails", pts: 3 }
+    ]
+  },
+  {
+    section: "Section B — Speed",
+    text: "Do you have alerts set up for workflow failures across ALL your client accounts?",
+    options: [
+      { text: "No alerts at all", pts: 0 },
+      { text: "Alerts on some accounts, not all", pts: 1 },
+      { text: "Alerts on most accounts", pts: 2 },
+      { text: "Full alert coverage across all client accounts", pts: 3 }
+    ]
+  },
+  {
+    section: "Section B — Speed",
+    text: "In the last 3 months, how many times did a client tell you about a broken workflow before you knew?",
+    options: [
+      { text: "3 or more times", pts: 0 },
+      { text: "Twice", pts: 1 },
+      { text: "Once", pts: 2 },
+      { text: "Never", pts: 3 }
+    ]
+  },
+  {
+    section: "Section C — Professionalism",
+    text: "Do your clients have visibility into the health of their automations?",
+    options: [
+      { text: "No — they only hear from me when something breaks", pts: 0 },
+      { text: "Occasionally I send manual updates", pts: 1 },
+      { text: "I send periodic reports but not consistently", pts: 2 },
+      { text: "They have a live status page they can check anytime", pts: 3 }
+    ]
+  },
+  {
+    section: "Section C — Professionalism",
+    text: "Do you send clients a regular workflow health report?",
+    options: [
+      { text: "Never", pts: 0 },
+      { text: "Occasionally, when something breaks", pts: 1 },
+      { text: "Monthly", pts: 2 },
+      { text: "Weekly, automatically", pts: 3 }
+    ]
+  },
+  {
+    section: "Section C — Professionalism",
+    text: "Has a client ever questioned the value of your retainer because 'nothing seems to be happening'?",
+    options: [
+      { text: "Yes, more than once", pts: 0 },
+      { text: "Once", pts: 1 },
+      { text: "Not directly, but I've sensed it", pts: 2 },
+      { text: "Never — clients clearly see the value", pts: 3 }
+    ]
+  },
+  {
+    section: "Section C — Professionalism",
+    text: "How confident are you that ALL your client workflows are running right now?",
+    options: [
+      { text: "Not at all — I genuinely don't know", pts: 0 },
+      { text: "Somewhat — I checked recently but can't be sure", pts: 1 },
+      { text: "Fairly confident — I have some monitoring in place", pts: 2 },
+      { text: "Completely confident — I have real-time visibility", pts: 3 }
+    ]
+  }
+];
+
+let answers = new Array(10).fill(null);
+let currentQ = 0;
+let collectedEmail = '';
+
+function startQuiz() {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  renderQuestion(0);
+}
+
+function renderQuestion(idx) {
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+  const q = questions[idx];
+
+  // Section name + section letter for the header chrome
+  // Format from data: "Section A — Visibility"
+  const sectionMatch = q.section.match(/Section\s+([A-Z])\s+—\s+(.+)/);
+  const sectionLetter = sectionMatch ? sectionMatch[1] : '';
+  const sectionName = sectionMatch ? sectionMatch[2] : q.section;
+
+  // Update header
+  document.getElementById('quiz-section-name').textContent = sectionName;
+  const segs = document.querySelectorAll('#progress-segments span');
+  segs.forEach(s => {
+    s.classList.remove('done', 'active');
+    const sl = s.getAttribute('data-section');
+    if (sl < sectionLetter) s.classList.add('done');
+    else if (sl === sectionLetter) s.classList.add('active');
+  });
+
+  const card = document.createElement('div');
+  card.className = 'question-card active';
+  card.innerHTML = `
+    <div class="section-badge">Section ${sectionLetter} · ${sectionName}</div>
+    <div class="q-number">Question ${String(idx + 1).padStart(2,'0')} of 10</div>
+    <div class="q-text">${q.text}</div>
+    <div class="options">
+      ${q.options.map((opt, oi) => `
+        <button class="option ${answers[idx] === oi ? 'selected' : ''}" onclick="selectOption(${idx},${oi})">
+          <span class="option-radio"></span>
+          <span>${opt.text}</span>
+        </button>
+      `).join('')}
+    </div>
+    <div class="nav-row">
+      <span class="q-hint">${idx > 0 ? `${idx} of 10 answered` : 'Select an option to continue'}</span>
+      <button class="btn-next ${answers[idx] !== null ? 'enabled' : ''}" id="btn-next" onclick="nextQ(${idx})">
+        <span>${idx === 9 ? 'See my score' : 'Next question'}</span>
+        <span class="arrow">→</span>
+      </button>
+    </div>
+  `;
+  container.appendChild(card);
+  updateProgress(idx);
+}
+
+function selectOption(qIdx, optIdx) {
+  answers[qIdx] = optIdx;
+  document.querySelectorAll('.option').forEach((o,i) => o.classList.toggle('selected', i === optIdx));
+  document.getElementById('btn-next').classList.add('enabled');
+}
+
+function nextQ(idx) {
+  if (answers[idx] === null) return;
+  if (idx === 9) { showGate(); return; }
+  currentQ = idx + 1;
+  renderQuestion(currentQ);
+}
+
+function updateProgress(idx) {
+  document.getElementById('progress-fill').style.width = (idx / 10 * 100) + '%';
+  document.getElementById('progress-label').textContent = `${String(idx).padStart(2,'0')} / 10`;
+}
+
+function showGate() {
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('email-gate').style.display = 'block';
+  document.getElementById('progress-fill').style.width = '100%';
+  document.getElementById('progress-label').textContent = '10 / 10';
+}
+
+function calcScore() {
+  let total = 0, A = 0, B = 0, C = 0;
+  answers.forEach((ans, i) => {
+    if (ans === null) return;
+    const pts = questions[i].options[ans].pts;
+    total += pts;
+    if (i < 3) A += pts;
+    else if (i < 6) B += pts;
+    else C += pts;
+  });
+  return { total, A, B, C };
+}
+
+function revealResult() {
+  const emailEl = document.getElementById('email-input');
+  const email = emailEl.value.trim();
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    emailEl.classList.add('error');
+    emailEl.placeholder = 'Please enter a valid email';
+    return;
+  }
+  collectedEmail = email;
+
+  // Send to Cloudflare/Resend via fetch (wire up later)
+  fetch('https://flowvigil.com/api/score-lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, score: calcScore().total, timestamp: new Date().toISOString() })
+  }).catch(() => {}); // silent fail during validation — don't block the result
+
+  showResult();
+}
+
+function showResult() {
+  const { total, A, B, C } = calcScore();
+  let tierKey, badge, title, desc, cta, accent, accentTint;
+
+  if (total <= 9) {
+    tierKey = 'critical'; badge = 'Critical exposure';
+    accent = 'var(--ruby)'; accentTint = 'var(--ruby-tint)';
+    title = 'Your agency is one silent failure away from losing a retainer.';
+    desc = "You're running blind. Client workflows are breaking and you're finding out from them — not your own systems. Every day without monitoring is a day you're trusting luck to protect your retainer revenue. The good news: this is 100% fixable, fast.";
+    cta = "See how FlowVigil gives you real-time visibility across all clients in under 5 minutes — free trial, no credit card.";
+  } else if (total <= 18) {
+    tierKey = 'partial'; badge = 'Partial coverage';
+    accent = 'var(--amber)'; accentTint = 'var(--amber-tint)';
+    title = "You've got some protection — but dangerous blind spots remain.";
+    desc = "You're doing better than most agencies, but your monitoring has gaps. Some clients are covered, others aren't. One uncovered account is all it takes to lose a retainer you've spent months building.";
+    cta = "FlowVigil fills the gaps — one dashboard, all clients, zero manual checking. Start free.";
+  } else if (total <= 25) {
+    tierKey = 'strong'; badge = 'Strong foundation';
+    accent = 'var(--indigo)'; accentTint = 'var(--indigo-tint)';
+    title = "You're proactive — but you're probably doing it manually.";
+    desc = "Solid instincts and good habits. But if your monitoring depends on you showing up every morning, it's a routine — not a system. What happens when you're sick, travelling, or just busy?";
+    cta = "Automate the monitoring you're already doing manually. Try FlowVigil free.";
+  } else {
+    tierKey = 'operator'; badge = 'Agency operator';
+    accent = 'var(--emerald)'; accentTint = 'var(--emerald-tint)';
+    title = "You're running a genuinely professional operation.";
+    desc = "Top 5% of automation agencies. Your clients are protected, they see your value, and you're not losing sleep over silent failures. We'd love to compare notes.";
+    cta = "See how FlowVigil stacks up against what you've already built.";
+  }
+
+  // semantic per-section bar color (kept consistent w/ original 3-color logic)
+  const barColor = (v, max) => {
+    const r = v / max;
+    if (r <= 0.33) return 'var(--ruby)';
+    if (r <= 0.67) return 'var(--amber)';
+    return 'var(--emerald)';
+  };
+
+  // Build a fake report ID + timestamp for the diagnostic chrome
+  const reportId = 'SFS-' + Math.random().toString(36).slice(2, 8).toUpperCase();
+  const now = new Date();
+  const ts = now.toISOString().slice(0, 16).replace('T', ' ');
+
+  document.getElementById('email-gate').style.display = 'none';
+  const el = document.getElementById('result');
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="report-head">
+      <div class="left">
+        <span>Diagnostic report</span>
+        <span class="sep"></span>
+        <span>${reportId}</span>
+        <span class="sep"></span>
+        <span>${ts} UTC</span>
+      </div>
+      <div class="right">${collectedEmail ? collectedEmail : ''}</div>
+    </div>
+
+    <div class="result-hero ${tierKey}" style="--accent:${accent}; --accent-tint:${accentTint};">
+      <div class="score-col">
+        <div>
+          <div class="score-eyebrow">Agency Monitoring Score</div>
+          <div class="score-display">${total}</div>
+          <div class="score-max">out of 30 total</div>
+        </div>
+        <div>
+          <div class="score-bar">
+            <div class="score-bar-fill" id="overallBar"></div>
+            <div class="score-bar-ticks"><span></span><span></span><span></span><span></span></div>
+          </div>
+          <div class="score-tier-row">
+            <span>Critical</span>
+            <span>Partial</span>
+            <span>Strong</span>
+            <span>Operator</span>
+          </div>
+        </div>
+      </div>
+      <div class="copy-col">
+        <div class="result-badge">${badge}</div>
+        <div class="result-title">${title}</div>
+        <p class="result-desc">${desc}</p>
+      </div>
+    </div>
+
+    <div class="breakdown">
+      <div class="breakdown-head">
+        <span>Section breakdown</span>
+        <span>3 sections · 10 questions</span>
+      </div>
+      <div class="breakdown-rows">
+        <div class="section-row">
+          <div class="section-name"><span class="ix">A</span> Visibility</div>
+          <div class="bar-wrap"><div class="bar-fill" id="barA" style="background:${barColor(A,9)}"></div></div>
+          <div class="section-pct">${Math.round(A/9*100)}%</div>
+          <div class="section-val">${A}<span class="of">/9</span></div>
+        </div>
+        <div class="section-row">
+          <div class="section-name"><span class="ix">B</span> Speed</div>
+          <div class="bar-wrap"><div class="bar-fill" id="barB" style="background:${barColor(B,9)}"></div></div>
+          <div class="section-pct">${Math.round(B/9*100)}%</div>
+          <div class="section-val">${B}<span class="of">/9</span></div>
+        </div>
+        <div class="section-row">
+          <div class="section-name"><span class="ix">C</span> Professionalism</div>
+          <div class="bar-wrap"><div class="bar-fill" id="barC" style="background:${barColor(C,12)}"></div></div>
+          <div class="section-pct">${Math.round(C/12*100)}%</div>
+          <div class="section-val">${C}<span class="of">/12</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-card">
+      <div class="copy">
+        <h3>The fix takes 5 minutes.</h3>
+        <p>${cta}</p>
+      </div>
+      <div class="actions">
+        <a class="btn-cta" href="https://flowvigil.com/#pricing">
+          <span>Start free trial</span>
+          <span class="arrow">→</span>
+        </a>
+        <div class="share-line">
+          Share your score:
+          <button class="share-btn" onclick="copyScore(${total})">copy to clipboard</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  setTimeout(() => {
+    document.getElementById('overallBar').style.width = (total/30*100) + '%';
+    document.getElementById('barA').style.width = (A/9*100) + '%';
+    document.getElementById('barB').style.width = (B/9*100) + '%';
+    document.getElementById('barC').style.width = (C/12*100) + '%';
+  }, 100);
+}
+
+function copyScore(score) {
+  const tier = score <= 9 ? 'Critical Exposure' : score <= 18 ? 'Partial Coverage' : score <= 25 ? 'Strong Foundation' : 'Agency Operator';
+  const text = `I just took The Silent Failure Scorecard by FlowVigil and scored ${score}/30 — ${tier}.\n\nHow exposed is your automation agency? → flowvigil.com/score`;
+  navigator.clipboard.writeText(text).then(() => alert('Copied! Share it anywhere.'));
+}
+</script>
+</body>
+</html>
