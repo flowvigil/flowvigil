@@ -1,5 +1,9 @@
 {
   "rewrites": [
     { "source": "/score", "destination": "/score.html" }
-  ]
+  ],
+  "functions": {
+    "api/waitlist.js": { "memory": 128, "maxDuration": 10 },
+    "api/score-lead.js": { "memory": 128, "maxDuration": 10 }
+  }
 }
