@@ -7,10 +7,10 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 
 function getTier(score) {
-  if (score <= 9)  return { label: 'Critical Exposure',    color: '#e63946', emoji: '🔴' };
-  if (score <= 18) return { label: 'Partial Coverage',     color: '#f4a261', emoji: '🟡' };
-  if (score <= 25) return { label: 'Strong Foundation',    color: '#457b9d', emoji: '🔵' };
-  return           { label: 'Agency Operator',             color: '#00c2a8', emoji: '🏆' };
+  if (score <= 9)  return { label: 'Critical Exposure',  color: '#e63946', accent: '#2a0a0d', border: '#3d1117', emoji: '🔴' };
+  if (score <= 18) return { label: 'Partial Coverage',   color: '#f4a261', accent: '#2a1d0a', border: '#3d2c11', emoji: '🟡' };
+  if (score <= 25) return { label: 'Strong Foundation',  color: '#457b9d', accent: '#0a1a2a', border: '#112a3d', emoji: '🔵' };
+  return           { label: 'Agency Operator',           color: '#00c2a8', accent: '#0a2a24', border: '#113d34', emoji: '🏆' };
 }
 
 function getTierMessage(score) {
@@ -24,7 +24,7 @@ function getTierMessage(score) {
     headline: "You've got some protection — but dangerous blind spots remain.",
     body: "You're doing better than most agencies, but your monitoring has gaps. Some clients are covered, others aren't. One uncovered account is all it takes to lose a retainer you've spent months building.",
     cta: "Fill the gaps with FlowVigil →",
-    urgency: "The accounts you're NOT monitoring are your biggest risk. FlowVigil covers all of them in one place."
+    urgency: "The accounts you're NOT monitoring are your biggest risk. FlowVigil covers all of them in one dashboard."
   };
   if (score <= 25) return {
     headline: "You're proactive — but you're doing it manually.",
@@ -41,11 +41,18 @@ function getTierMessage(score) {
 }
 
 export default async function handler(req, res) {
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  res.setHeader('Access-Control-Allow-Origin', 'https://flowvigil.com');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -100,55 +107,101 @@ export default async function handler(req, res) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="margin:0; padding:0; background:#080b0f; font-family: sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#080b0f; padding: 40px 20px;">
+<body style="margin:0; padding:0; background:#0a0c10; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0c10; padding: 48px 20px;">
     <tr>
       <td align="center">
-        <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px; width:100%;">
+        <table width="540" cellpadding="0" cellspacing="0" style="max-width:540px; width:100%;">
 
           <!-- HEADER -->
           <tr>
-            <td style="padding-bottom: 28px;">
-              <span style="font-size: 20px; font-weight: 800; color: #f0f2f5; letter-spacing: -0.5px;">
-                👁 FlowVigil
-              </span>
+            <td style="padding-bottom: 36px;">
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding-right: 10px; vertical-align: middle;">
+                    <img src="https://www.flowvigil.com/FlowVigilLogo.jpg" width="28" height="28" style="border-radius:6px; display:block;" alt="FlowVigil">
+                  </td>
+                  <td style="vertical-align: middle;">
+                    <span style="font-size: 18px; font-weight: 700; color: #e8eaed; letter-spacing: -0.5px;">FlowVigil</span>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
 
-          <!-- SCORE HERO -->
+          <!-- SECTION LABEL -->
           <tr>
-            <td style="background: #111518; border: 1px solid #1a1f25; border-radius: 8px; padding: 36px 32px; margin-bottom: 16px;">
+            <td style="padding-bottom: 24px;">
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="color: #4a5568; font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 0.1em;">01</td>
+                  <td style="width: 12px;"></td>
+                  <td style="color: ${tier.color}; font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;">${tier.emoji} ${tier.label}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-              <p style="color: ${tier.color}; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; margin: 0 0 12px; font-family: monospace;">
-                ${tier.emoji} ${tier.label}
-              </p>
+          <!-- SCORE CARD -->
+          <tr>
+            <td style="background: ${tier.accent}; border: 1px solid ${tier.border}; border-radius: 10px; padding: 40px 36px; margin-bottom: 14px;">
 
-              <div style="margin-bottom: 20px;">
-                <span style="font-size: 64px; font-weight: 800; color: ${tier.color}; line-height: 1; letter-spacing: -2px;">${score}</span>
-                <span style="font-size: 20px; color: #6b7585; font-family: monospace;">/30</span>
+              <div style="margin-bottom: 24px;">
+                <span style="font-size: 72px; font-weight: 800; color: ${tier.color}; line-height: 1; letter-spacing: -3px;">${score}</span>
+                <span style="font-size: 22px; color: #4a5568; font-family: 'Courier New', monospace; vertical-align: top; margin-left: 4px;">/30</span>
               </div>
 
-              <h1 style="color: #f0f2f5; font-size: 22px; font-weight: 800; margin: 0 0 14px; line-height: 1.25; letter-spacing: -0.5px;">
+              <h1 style="color: #e8eaed; font-size: 24px; font-weight: 700; margin: 0 0 16px; line-height: 1.25; letter-spacing: -0.5px;">
                 ${msg.headline}
               </h1>
 
-              <p style="color: #6b7585; font-size: 14px; line-height: 1.7; margin: 0 0 24px;">
+              <p style="color: #7a8599; font-size: 15px; line-height: 1.75; margin: 0;">
                 ${msg.body}
               </p>
 
-              <div style="background: #1a1f25; border-left: 3px solid ${tier.color}; padding: 14px 18px; margin-bottom: 28px; border-radius: 0 4px 4px 0;">
-                <p style="color: #c8cdd6; font-size: 13px; margin: 0; line-height: 1.6;">
-                  ${msg.urgency}
-                </p>
-              </div>
+            </td>
+          </tr>
 
-              <table cellpadding="0" cellspacing="0">
+          <tr><td style="height: 14px;"></td></tr>
+
+          <!-- URGENCY CARD -->
+          <tr>
+            <td style="background: #12151a; border: 1px solid #1e2330; border-radius: 10px; padding: 32px 36px;">
+
+              <table cellpadding="0" cellspacing="0" style="margin-bottom: 24px;">
                 <tr>
-                  <td style="background: #00c2a8; border-radius: 4px;">
-                    <a href="https://flowvigil.com/#pricing"
-                       style="display: inline-block; padding: 14px 28px; color: #080b0f; font-size: 13px; font-weight: 800; text-decoration: none; letter-spacing: 0.05em; text-transform: uppercase;">
-                      ${msg.cta}
-                    </a>
+                  <td style="color: #4a5568; font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 0.1em;">02</td>
+                  <td style="width: 12px;"></td>
+                  <td style="color: #00c2a8; font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;">What this means</td>
+                </tr>
+              </table>
+
+              <!-- CALLOUT -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin: 0 0 28px;">
+                <tr>
+                  <td style="width: 3px; background: ${tier.color}; border-radius: 2px;"></td>
+                  <td style="padding: 18px 22px; background: #181c24; border-radius: 0 8px 8px 0;">
+                    <p style="color: #c0c7d4; font-size: 14px; margin: 0; line-height: 1.65;">
+                      ${msg.urgency}
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA BUTTON -->
+              <table cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="left">
+                    <table cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="background: #00c2a8; border-radius: 6px;">
+                          <a href="https://flowvigil.com/#pricing"
+                             style="display: inline-block; padding: 14px 30px; color: #0a0c10; font-size: 13px; font-weight: 700; text-decoration: none; letter-spacing: 0.04em; text-transform: uppercase;">
+                            ${msg.cta}
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -158,20 +211,24 @@ export default async function handler(req, res) {
 
           <tr><td style="height: 14px;"></td></tr>
 
-          <!-- WHAT'S NEXT -->
+          <!-- WHAT'S NEXT CARD -->
           <tr>
-            <td style="background: #111518; border: 1px solid #1a1f25; border-radius: 8px; padding: 28px 32px;">
+            <td style="background: #12151a; border: 1px solid #1e2330; border-radius: 10px; padding: 32px 36px;">
 
-              <p style="color: #00c2a8; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; margin: 0 0 14px; font-family: monospace;">
-                What happens next
-              </p>
+              <table cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+                <tr>
+                  <td style="color: #4a5568; font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 0.1em;">03</td>
+                  <td style="width: 12px;"></td>
+                  <td style="color: #00c2a8; font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;">What happens next</td>
+                </tr>
+              </table>
 
-              <p style="color: #6b7585; font-size: 14px; line-height: 1.7; margin: 0 0 16px;">
+              <p style="color: #7a8599; font-size: 15px; line-height: 1.75; margin: 0 0 16px;">
                 I'm the founder of FlowVigil. Over the next few days I'll send you a short series on how agencies like yours can fix monitoring gaps — whether or not you use FlowVigil.
               </p>
 
-              <p style="color: #6b7585; font-size: 14px; line-height: 1.7; margin: 0;">
-                In the meantime — hit reply and tell me: what's your current setup for monitoring client workflows? Even two sentences helps me understand exactly what to build first.
+              <p style="color: #7a8599; font-size: 15px; line-height: 1.75; margin: 0;">
+                In the meantime — hit reply and tell me: <strong style="color: #c0c7d4;">what's your current setup for monitoring client workflows?</strong> Even two sentences helps me understand exactly what to build first.
               </p>
 
             </td>
@@ -179,12 +236,19 @@ export default async function handler(req, res) {
 
           <!-- FOOTER -->
           <tr>
-            <td style="padding-top: 24px; text-align: center;">
-              <p style="color: #3a4050; font-size: 11px; font-family: monospace; margin: 0; line-height: 1.8;">
-                FlowVigil · No more silent failures.<br>
-                <a href="https://flowvigil.com" style="color: #00c2a8; text-decoration: none;">flowvigil.com</a>
-                · <a href="mailto:hello@flowvigil.com" style="color: #3a4050; text-decoration: none;">Unsubscribe</a>
-              </p>
+            <td style="padding-top: 32px;">
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="border-top: 1px solid #1e2330; padding-top: 20px; text-align: center;">
+                    <p style="color: #3a4050; font-size: 11px; font-family: 'Courier New', monospace; margin: 0; line-height: 1.8;">
+                      FlowVigil — No more silent failures.<br>
+                      <a href="https://flowvigil.com" style="color: #00c2a8; text-decoration: none;">flowvigil.com</a>
+                      &nbsp;·&nbsp;
+                      <a href="mailto:hello@flowvigil.com" style="color: #3a4050; text-decoration: none;">Unsubscribe</a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
 
@@ -215,12 +279,15 @@ export default async function handler(req, res) {
           to: 'hello@flowvigil.com',
           subject: `🔥 HOT LEAD: ${email} scored ${score}/30 (${tier.label})`,
           html: `
-            <p><strong>Hot scorecard lead!</strong></p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Score:</strong> ${score}/30 — ${tier.label}</p>
-            <p><strong>Time:</strong> ${timestamp || new Date().toISOString()}</p>
-            <p style="color: red;"><strong>Action:</strong> Reach out within 24 hours — this person is actively feeling the pain.</p>
-            <p><a href="https://app.supabase.com">View all leads in Supabase →</a></p>
+            <div style="font-family: sans-serif; background: #0a0c10; color: #e8eaed; padding: 24px;">
+              <h2 style="color: #e63946; margin: 0 0 16px;">🔥 Hot Scorecard Lead</h2>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Score:</strong> <span style="color: ${tier.color}; font-weight: 700;">${score}/30 — ${tier.label}</span></p>
+              <p><strong>Time:</strong> ${timestamp || new Date().toISOString()}</p>
+              <div style="margin-top: 16px; padding: 14px 18px; background: #181c24; border-left: 3px solid #e63946; border-radius: 0 6px 6px 0;">
+                <p style="color: #f0f2f5; margin: 0; font-size: 14px;"><strong>Action:</strong> Reach out within 24 hours — this person is actively feeling the pain.</p>
+              </div>
+            </div>
           `
         })
       });
