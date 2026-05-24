@@ -1,0 +1,18 @@
+name: FlowVigil X Monitor
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # every 30 minutes
+  workflow_dispatch:          # allows manual trigger from GitHub UI
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger X Monitor
+        run: |
+          curl -X GET https://flowvigil.com/api/x-monitor \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            --fail \
+            --silent \
+            --show-error
