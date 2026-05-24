@@ -3,7 +3,14 @@
     { "source": "/score", "destination": "/score.html" }
   ],
   "functions": {
-    "api/waitlist.js": { "memory": 128, "maxDuration": 10 },
-    "api/score-lead.js": { "memory": 128, "maxDuration": 10 }
-  }
+    "api/waitlist.js":    { "memory": 128, "maxDuration": 10 },
+    "api/score-lead.js":  { "memory": 128, "maxDuration": 10 },
+    "api/x-monitor.js":  { "memory": 256, "maxDuration": 30 }
+  },
+  "crons": [
+    {
+      "path": "/api/x-monitor",
+      "schedule": "*/30 * * * *"
+    }
+  ]
 }
