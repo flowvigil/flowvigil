@@ -11,7 +11,6 @@ jobs:
     steps:
     - name: Trigger X Monitor
       run: |
-        curl -L -X GET "https://flowvigil.com/api/x-monitor?secret=${{ secrets.CRON_SECRET }}" \
+        curl -L -X GET "https://www.flowvigil.com/api/x-monitor?secret=${{ secrets.CRON_SECRET }}" \
         --fail \
-        --show-error \
-        --verbose
+        --show-error
