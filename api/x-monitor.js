@@ -399,10 +399,15 @@ function buildEmailHtml(newTweets) {
 
 // ─── MAIN HANDLER ──────────────────────────────────────────────────────────
 export default async function handler(req, res) {
-  const authHeader = req.headers.authorization;
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
+const authHeader = req.headers.authorization;
+const querySecret = req.query?.secret;
+const isAuthorized =
+  authHeader === `Bearer ${process.env.CRON_SECRET}` ||
+  querySecret === process.env.CRON_SECRET;
+
+if (!isAuthorized) {
+  return res.status(401).json({ error: 'Unauthorized' });
+}
 
   try {
     const allNewTweets = [];
