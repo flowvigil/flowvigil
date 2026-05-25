@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Trigger X Monitor
         run: |
-          curl -X GET https://flowvigil.com/api/x-monitor \
+          curl -L -X GET https://flowvigil.com/api/x-monitor \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             --fail \
             --silent \
