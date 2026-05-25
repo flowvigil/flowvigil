@@ -399,6 +399,9 @@ function buildEmailHtml(newTweets) {
 
 // ─── MAIN HANDLER ──────────────────────────────────────────────────────────
 export default async function handler(req, res) {
+console.log('CRON_SECRET value:', process.env.CRON_SECRET);
+console.log('Query secret received:', req.query?.secret);
+console.log('Auth header received:', req.headers.authorization);
 const authHeader = req.headers.authorization;
 const querySecret = req.query?.secret;
 const isAuthorized =
