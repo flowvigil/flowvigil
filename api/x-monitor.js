@@ -399,18 +399,24 @@ function buildEmailHtml(newTweets) {
 
 // ─── MAIN HANDLER ──────────────────────────────────────────────────────────
 export default async function handler(req, res) {
-console.log('CRON_SECRET value:', process.env.CRON_SECRET);
-console.log('Query secret received:', req.query?.secret);
-console.log('Auth header received:', req.headers.authorization);
-const authHeader = req.headers.authorization;
-const querySecret = req.query?.secret;
-const isAuthorized =
-  authHeader === `Bearer ${process.env.CRON_SECRET}` ||
-  querySecret === process.env.CRON_SECRET;
+// console.log('CRON_SECRET value:', process.env.CRON_SECRET);
+// console.log('Query secret received:', req.query?.secret);
+// console.log('Auth header received:', req.headers.authorization);
+// const authHeader = req.headers.authorization;
+// const querySecret = req.query?.secret;
+// const isAuthorized =
+//   authHeader === `Bearer ${process.env.CRON_SECRET}` ||
+//   querySecret === process.env.CRON_SECRET;
 
-if (!isAuthorized) {
-  return res.status(401).json({ error: 'Unauthorized' });
-}
+// if (!isAuthorized) {
+//   return res.status(401).json({ error: 'Unauthorized' });
+//}
+  // TEMP: return immediately to confirm the function executes
+  return res.status(200).json({ 
+    message: 'Function reached',
+    cron_secret_set: !!process.env.CRON_SECRET,
+    cron_secret_value: process.env.CRON_SECRET,
+    query_secret: req.query?.secret
 
   try {
     const allNewTweets = [];
