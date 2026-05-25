@@ -9,9 +9,9 @@ jobs:
   monitor:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger X Monitor
-        run: |
-          curl -L -X GET https://flowvigil.com/api/x-monitor \
-            -H "Authorization: Bearer flowvigil-monitor-2026" \
-            --fail \
-            --show-error
+    - name: Trigger X Monitor
+      run: |
+        curl -L -X GET "https://flowvigil.com/api/x-monitor?secret=${{ secrets.CRON_SECRET }}" \
+        --fail \
+        --show-error \
+        --verbose
