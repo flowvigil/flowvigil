@@ -12,6 +12,6 @@ jobs:
       - name: Trigger X Monitor
         run: |
           curl -L -X GET https://flowvigil.com/api/x-monitor \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Authorization: Bearer flowvigil-monitor-2026" \
             --fail \
             --show-error
