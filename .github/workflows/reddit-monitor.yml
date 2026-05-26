@@ -1,0 +1,16 @@
+name: FlowVigil Reddit Monitor
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Reddit Monitor
+        run: |
+          curl -X GET "https://www.flowvigil.com/api/reddit-monitor?secret=${{ secrets.CRON_SECRET }}" \
+            --fail \
+            --show-error
